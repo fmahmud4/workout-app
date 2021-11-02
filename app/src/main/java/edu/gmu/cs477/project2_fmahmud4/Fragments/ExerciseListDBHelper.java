@@ -69,6 +69,8 @@ public class ExerciseListDBHelper extends SQLiteOpenHelper {
     void deleteDatabase() {
         context.deleteDatabase(DBNAME);
     }
+
+
 }
 
 

@@ -71,9 +71,9 @@ public class ExercisesFragment extends Fragment {
 
         lv_elist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int id, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 Bundle dbInfo = new Bundle();
-                dbInfo.putInt("_id", id+1);
+                dbInfo.putLong("_id", id);
                 EditAddExerciseFragment editAddDB =  new EditAddExerciseFragment();
                 editAddDB.setArguments(dbInfo);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

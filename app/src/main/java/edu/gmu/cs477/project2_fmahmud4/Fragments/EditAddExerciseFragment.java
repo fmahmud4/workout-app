@@ -3,18 +3,18 @@ package edu.gmu.cs477.project2_fmahmud4.Fragments;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.text.TextRunShaper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.SimpleCursorAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,13 +27,16 @@ import edu.gmu.cs477.project2_fmahmud4.R;
  */
 public class EditAddExerciseFragment extends Fragment {
 
-    int e_id;
+    long e_id;
     public static String TAG = EditAddExerciseFragment.class.getName();
 
     private SQLiteDatabase db = null;
     private ExerciseListDBHelper dbHelper = null;
     private LoadDB dbLoader = null;
-    private TextView exercise, reps, sets, weight, notes, txt_update;
+    private EditText exercise, reps, sets, weight, notes;
+    private TextView txt_update;
+    private String db_ex, db_exID, db_exREPS, db_exSETS, db_exWEIGHT, db_exNOTES;
+
     private Button btn_commit, btn_cancel;
     Cursor mCursor;
 
@@ -61,7 +64,7 @@ public class EditAddExerciseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            e_id = getArguments().getInt("_id");
+            e_id = getArguments().getLong("_id");
         }
     }
 
@@ -96,29 +99,50 @@ public class EditAddExerciseFragment extends Fragment {
         btn_commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db = dbHelper.getWritableDatabase();
+
+
+                //db = dbHelper.getWritableDatabase();
 
                 ContentValues cv = new ContentValues();
 
-                long _id = (long) e_id;
-                if (exercise.getText() != null) {
-                    cv.put(ExerciseListDBHelper.EXERCISE, exercise.getText().toString());
-                }
-                if (reps.getText() != null) {
-                    cv.put(ExerciseListDBHelper.REPS, reps.getText().toString());
-                }
-                if (sets.getText() != null) {
-                    cv.put(ExerciseListDBHelper.SETS, reps.getText().toString());
-                }
-                if (weight.getText() != null) {
-                    cv.put(ExerciseListDBHelper.WEIGHT, weight.getText().toString());
-                }
-                int i = db.update(dbHelper.TABLE_NAME, cv, ExerciseListDBHelper.ID + " = " + _id, null);
 
-                Toast.makeText(getContext(), weight.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                if (!isEmpty(exercise)) {
+                    cv.put(ExerciseListDBHelper.EXERCISE, exercise.getText().toString());
+                } else {
+                    cv.put(ExerciseListDBHelper.EXERCISE, db_ex);
+                }
+                if (!isEmpty(reps)) {
+                    cv.put(ExerciseListDBHelper.REPS, reps.getText().toString());
+                } else {
+                    cv.put(ExerciseListDBHelper.REPS, db_exREPS);
+                }
+                if (!isEmpty(sets)) {
+                    cv.put(ExerciseListDBHelper.SETS, sets.getText().toString());
+                } else {
+                    cv.put(ExerciseListDBHelper.SETS, db_exSETS);
+                }
+                if (!isEmpty(weight)) {
+                    cv.put(ExerciseListDBHelper.WEIGHT, weight.getText().toString());
+                } else {
+                    cv.put(ExerciseListDBHelper.WEIGHT, db_exWEIGHT);
+                }
+
+
+                String id = e_id + "";
+                String db_id = getItemFromDbById(e_id);
+                db.update(dbHelper.TABLE_NAME, cv, ExerciseListDBHelper.ID + " = ? ",
+                        new String[] { id });
+
+                cv.get(ExerciseListDBHelper.REPS);
+
+
                 dbLoader = new LoadDB();
                 dbLoader.execute();
                 dbLoader.onPostExecute(mCursor);
+
+
+
 
             }
         });
@@ -127,6 +151,20 @@ public class EditAddExerciseFragment extends Fragment {
 
 
         return v;
+    }
+
+    private String getItemFromDbById(long id) {
+        String _id = String.valueOf(id);
+        Cursor c = db.query(dbHelper.TABLE_NAME, all_columns,dbHelper.ID + "=?",
+                new String[] { _id }, null, null ,null );
+        if (c != null) c.moveToFirst();
+        return c.getString(1);
+    }
+
+    // if true etText is empty
+    // else etText is not empty
+    private boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() == 0;
     }
 
     public void onResume(){
@@ -141,16 +179,16 @@ public class EditAddExerciseFragment extends Fragment {
                 break;
             }
         }
-        String ex =  mCursor.getString(mCursor.getColumnIndexOrThrow("exercise"));
-        String ex_id = mCursor.getString(mCursor.getColumnIndexOrThrow("_id"));
-        String ex_reps = mCursor.getString(mCursor.getColumnIndexOrThrow("reps"));
-        String ex_sets = mCursor.getString(mCursor.getColumnIndexOrThrow("sets"));
-        String ex_weight = mCursor.getString(mCursor.getColumnIndexOrThrow("weight"));
+        db_ex =  mCursor.getString(mCursor.getColumnIndexOrThrow("exercise"));
+        db_exID = mCursor.getString(mCursor.getColumnIndexOrThrow("_id"));
+        db_exREPS = mCursor.getString(mCursor.getColumnIndexOrThrow("reps"));
+        db_exSETS = mCursor.getString(mCursor.getColumnIndexOrThrow("sets"));
+        db_exWEIGHT = mCursor.getString(mCursor.getColumnIndexOrThrow("weight"));
 
-        txt_update.setText("Update values for " + ex);
-        exercise.setHint(ex);
-        reps.setHint(ex_reps);
-        sets.setHint(ex_sets);
+        txt_update.setText("Update values for " + db_ex);
+        exercise.setHint(db_ex);
+        reps.setHint(db_exREPS);
+        sets.setHint(db_exSETS);
 
 
 
@@ -177,8 +215,8 @@ public class EditAddExerciseFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        db.close();
-        dbHelper.deleteDatabase();
+        //db.close();
+        //dbHelper.deleteDatabase();
         super.onDestroy();
     }
 
@@ -194,16 +232,19 @@ public class EditAddExerciseFragment extends Fragment {
                     break;
                 }
             }
-            String ex =  mCursor.getString(mCursor.getColumnIndexOrThrow("exercise"));
-            String ex_id = mCursor.getString(mCursor.getColumnIndexOrThrow("_id"));
-            String ex_reps = mCursor.getString(mCursor.getColumnIndexOrThrow("reps"));
-            String ex_sets = mCursor.getString(mCursor.getColumnIndexOrThrow("sets"));
-            String ex_weight = mCursor.getString(mCursor.getColumnIndexOrThrow("weight"));
+            db_ex =  mCursor.getString(mCursor.getColumnIndexOrThrow("exercise"));
+            db_exID = mCursor.getString(mCursor.getColumnIndexOrThrow("_id"));
+            db_exREPS = mCursor.getString(mCursor.getColumnIndexOrThrow("reps"));
+            db_exSETS = mCursor.getString(mCursor.getColumnIndexOrThrow("sets"));
+            db_exWEIGHT = mCursor.getString(mCursor.getColumnIndexOrThrow("weight"));
 
-            txt_update.setText("Update values for " + ex);
-            exercise.setHint(ex);
-            reps.setHint(ex_reps);
-            sets.setHint(ex_sets);
+            //Toast.makeText(getContext(), db_exREPS +"" , Toast.LENGTH_SHORT).show();
+
+
+            txt_update.setText("Update values for " + db_ex);
+            exercise.setHint(db_ex);
+            reps.setHint(db_exREPS);
+            sets.setHint(db_exSETS);
            // reps.setHint("7");
             //reps.setText("db_reps");
             /*
