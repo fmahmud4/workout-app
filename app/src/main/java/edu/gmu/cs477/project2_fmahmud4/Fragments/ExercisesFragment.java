@@ -8,24 +8,31 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
+import edu.gmu.cs477.project2_fmahmud4.MainActivity;
 import edu.gmu.cs477.project2_fmahmud4.R;
 
 public class ExercisesFragment extends Fragment {
-    //TODO USE RECYCLER VIEW
+    //TODO USE RECYCLER VIEW -- DONE
+    //TODO IMPLEMENT TYPE SETTING and GENERALS -- DONE
 
     //TODO IMPLEMENT NOTES
 
     //TODO MAKE SURE SCROLLING WORKS PROPERLY
 
-    //TODO IMPLEMENT TYPE SETTING and GENERALS
+    //TODO implement edit workout screen
+    //TODO implement add workout screen
+
 
 
     private WorkoutViewModel mViewModel;
@@ -45,10 +52,7 @@ public class ExercisesFragment extends Fragment {
             ExerciseListDBHelper.WEIGHT
     };
     final static String[] print_columns = {
-            ExerciseListDBHelper.EXERCISE,
-            ExerciseListDBHelper.SETS,
-            ExerciseListDBHelper.REPS,
-            ExerciseListDBHelper.WEIGHT
+            ExerciseListDBHelper.EXERCISE
     };
 
     public static String TAG = ExercisesFragment.class.getName();
@@ -65,6 +69,20 @@ public class ExercisesFragment extends Fragment {
         lv_elist = view.findViewById(R.id.lv_elist);
         dbHelper = new ExerciseListDBHelper(getContext());
 
+        lv_elist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int id, long l) {
+                Bundle dbInfo = new Bundle();
+                dbInfo.putInt("_id", id+1);
+                EditAddExerciseFragment editAddDB =  new EditAddExerciseFragment();
+                editAddDB.setArguments(dbInfo);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.addToBackStack(EditAddExerciseFragment.TAG);
+                transaction.replace(R.id.main_frame, editAddDB);
+                transaction.commit();
+            }
+        });
+
 
         return view;
     }
@@ -74,11 +92,13 @@ public class ExercisesFragment extends Fragment {
 
         mCursor = db.query(dbHelper.TABLE_NAME, all_columns, null, null, null, null,
                 null);
+        //Toast.makeText(getContext(), mCursor.getString(1), Toast.LENGTH_SHORT).show();
+
         elistAdapter = new SimpleCursorAdapter(getContext(),
                 R.layout.exercise_list,
                 mCursor,
                 print_columns,
-                new int[] { R.id.exercise, R.id.sets, R.id.reps, R.id.weight},0);
+                new int[] { R.id.exercise},0);
         lv_elist.setAdapter(elistAdapter);
 
 
@@ -102,7 +122,7 @@ public class ExercisesFragment extends Fragment {
                     R.layout.exercise_list,
                     data,
                     print_columns,
-                    new int[] { R.id.exercise, R.id.sets, R.id.reps, R.id.weight},0);
+                    new int[] { R.id.exercise},0);
             mCursor = data;
             lv_elist.setAdapter(elistAdapter);
         }

@@ -49,8 +49,8 @@ public class ExerciseListDBHelper extends SQLiteOpenHelper {
         values.put(this.WEIGHT, "95");
         db.insert(this.TABLE_NAME, null, values);
         values.put(this.EXERCISE, "Deadlift");
-        values.put(this.SETS, "4");
-        values.put(this.REPS, "3");
+        values.put(this.SETS, "8");
+        values.put(this.REPS, "1");
         values.put(this.WEIGHT, "185");
         db.insert(this.TABLE_NAME, null, values);
 

@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import edu.gmu.cs477.project2_fmahmud4.Fragments.ExerciseListDBHelper;
 import edu.gmu.cs477.project2_fmahmud4.Fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private FrameLayout main_frame;
+
+    private ExerciseListDBHelper dbHelper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,4 +27,9 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
 
     }
+
+    public ExerciseListDBHelper getDbHelper() {
+        return dbHelper;
+    }
+
 }
