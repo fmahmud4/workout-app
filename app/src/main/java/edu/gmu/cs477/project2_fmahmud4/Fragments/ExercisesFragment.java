@@ -15,11 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
-import edu.gmu.cs477.project2_fmahmud4.MainActivity;
 import edu.gmu.cs477.project2_fmahmud4.R;
 
 public class ExercisesFragment extends Fragment {
@@ -39,6 +38,7 @@ public class ExercisesFragment extends Fragment {
     private SQLiteDatabase db = null;
     private ExerciseListDBHelper dbHelper = null;
     private LoadDB dbLoader = null;
+    private Button btn_add;
     public static RecyclerView rv_elist;
     public static ListView lv_elist;
     SimpleCursorAdapter elistAdapter;
@@ -67,18 +67,31 @@ public class ExercisesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_exercises, container, false);
         //rv_elist = view.findViewById(R.id.rv_elist);
         lv_elist = view.findViewById(R.id.lv_elist);
+        btn_add = view.findViewById(R.id.btn_add);
         dbHelper = new ExerciseListDBHelper(getContext());
+
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AddExerciseFragment addDB =  new AddExerciseFragment();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.addToBackStack(AddExerciseFragment.TAG);
+                transaction.replace(R.id.main_frame, addDB);
+                transaction.commit();
+            }
+        });
 
         lv_elist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 Bundle dbInfo = new Bundle();
                 dbInfo.putLong("_id", id);
-                EditAddExerciseFragment editAddDB =  new EditAddExerciseFragment();
-                editAddDB.setArguments(dbInfo);
+                EditExerciseFragment editDB =  new EditExerciseFragment();
+                editDB.setArguments(dbInfo);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.addToBackStack(EditAddExerciseFragment.TAG);
-                transaction.replace(R.id.main_frame, editAddDB);
+                transaction.addToBackStack(EditExerciseFragment.TAG);
+                transaction.replace(R.id.main_frame, editDB);
                 transaction.commit();
             }
         });
@@ -112,7 +125,7 @@ public class ExercisesFragment extends Fragment {
     @Override
     public void onDestroy() {
         db.close();
-        dbHelper.deleteDatabase();
+        //dbHelper.deleteDatabase();
         super.onDestroy();
     }
 

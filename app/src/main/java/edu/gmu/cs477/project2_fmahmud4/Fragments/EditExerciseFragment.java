@@ -3,7 +3,6 @@ package edu.gmu.cs477.project2_fmahmud4.Fragments;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.text.TextRunShaper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -16,25 +15,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import edu.gmu.cs477.project2_fmahmud4.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EditAddExerciseFragment#newInstance} factory method to
+ * Use the {@link EditExerciseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EditAddExerciseFragment extends Fragment {
+public class EditExerciseFragment extends Fragment {
 
     long e_id;
-    public static String TAG = EditAddExerciseFragment.class.getName();
+    public static String TAG = EditExerciseFragment.class.getName();
 
     private SQLiteDatabase db = null;
     private ExerciseListDBHelper dbHelper = null;
     private LoadDB dbLoader = null;
-    private EditText exercise, reps, sets, weight, notes;
-    private TextView txt_update;
+    private EditText reps, sets, weight, notes;
+    private TextView exercise, txt_update;
     private String db_ex, db_exID, db_exREPS, db_exSETS, db_exWEIGHT, db_exNOTES;
 
     private Button btn_commit, btn_cancel;
@@ -48,13 +46,13 @@ public class EditAddExerciseFragment extends Fragment {
             ExerciseListDBHelper.WEIGHT
     };
 
-    public EditAddExerciseFragment() {
+    public EditExerciseFragment() {
         // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters
-    public static EditAddExerciseFragment newInstance(String param1, String param2) {
-        EditAddExerciseFragment fragment = new EditAddExerciseFragment();
+    public static EditExerciseFragment newInstance(String param1, String param2) {
+        EditExerciseFragment fragment = new EditExerciseFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -72,7 +70,7 @@ public class EditAddExerciseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_edit_add_exercise, container, false);
+        View v = inflater.inflate(R.layout.fragment_edit_exercise, container, false);
         txt_update = v.findViewById(R.id.txt_update);
         exercise = v.findViewById(R.id.e_name);
         reps = v.findViewById(R.id.reps);
@@ -92,7 +90,6 @@ public class EditAddExerciseFragment extends Fragment {
                 if(fm.getBackStackEntryCount() != 0) {
                     fm.popBackStack();
                 }
-
             }
         });
 
@@ -107,11 +104,14 @@ public class EditAddExerciseFragment extends Fragment {
 
 
 
+                /*
                 if (!isEmpty(exercise)) {
                     cv.put(ExerciseListDBHelper.EXERCISE, exercise.getText().toString());
                 } else {
                     cv.put(ExerciseListDBHelper.EXERCISE, db_ex);
                 }
+
+                 */
                 if (!isEmpty(reps)) {
                     cv.put(ExerciseListDBHelper.REPS, reps.getText().toString());
                 } else {
@@ -186,7 +186,7 @@ public class EditAddExerciseFragment extends Fragment {
         db_exWEIGHT = mCursor.getString(mCursor.getColumnIndexOrThrow("weight"));
 
         txt_update.setText("Update values for " + db_ex);
-        exercise.setHint(db_ex);
+        exercise.setText(db_ex);
         reps.setHint(db_exREPS);
         sets.setHint(db_exSETS);
 
@@ -242,7 +242,7 @@ public class EditAddExerciseFragment extends Fragment {
 
 
             txt_update.setText("Update values for " + db_ex);
-            exercise.setHint(db_ex);
+            exercise.setText(db_ex);
             reps.setHint(db_exREPS);
             sets.setHint(db_exSETS);
            // reps.setHint("7");
