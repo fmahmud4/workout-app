@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.gmu.cs477.project2_fmahmud4.R;
@@ -95,7 +94,7 @@ public class AddExerciseFragment extends Fragment {
                         Cursor c = db.query(dbHelper.TABLE_NAME, all_columns, dbHelper.EXERCISE + "=?",
                                 new  String[] {String.valueOf(exercise.getText())}, null, null, null);
                         if (c.moveToFirst()) {
-                            throw new java.lang.InstantiationException("Exercise already exists");
+                            throw new Exception("Exercise already exists");
                         }
 
                     } else {

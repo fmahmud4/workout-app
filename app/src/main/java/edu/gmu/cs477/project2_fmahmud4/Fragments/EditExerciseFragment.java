@@ -18,11 +18,7 @@ import android.widget.TextView;
 
 import edu.gmu.cs477.project2_fmahmud4.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EditExerciseFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class EditExerciseFragment extends Fragment {
 
     long e_id;
@@ -97,21 +93,8 @@ public class EditExerciseFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-
-                //db = dbHelper.getWritableDatabase();
-
                 ContentValues cv = new ContentValues();
 
-
-
-                /*
-                if (!isEmpty(exercise)) {
-                    cv.put(ExerciseListDBHelper.EXERCISE, exercise.getText().toString());
-                } else {
-                    cv.put(ExerciseListDBHelper.EXERCISE, db_ex);
-                }
-
-                 */
                 if (!isEmpty(reps)) {
                     cv.put(ExerciseListDBHelper.REPS, reps.getText().toString());
                 } else {
@@ -128,27 +111,17 @@ public class EditExerciseFragment extends Fragment {
                     cv.put(ExerciseListDBHelper.WEIGHT, db_exWEIGHT);
                 }
 
-
                 String id = e_id + "";
                 String db_id = getItemFromDbById(e_id);
                 db.update(dbHelper.TABLE_NAME, cv, ExerciseListDBHelper.ID + " = ? ",
                         new String[] { id });
 
                 cv.get(ExerciseListDBHelper.REPS);
-
-
                 dbLoader = new LoadDB();
                 dbLoader.execute();
                 dbLoader.onPostExecute(mCursor);
-
-
-
-
             }
         });
-
-
-
 
         return v;
     }
@@ -190,22 +163,6 @@ public class EditExerciseFragment extends Fragment {
         reps.setHint(db_exREPS);
         sets.setHint(db_exSETS);
 
-
-
-        //String db_reps = mCursor.getString(mCursor.getColumnIndexOrThrow("reps"));
-        //reps.setHint("7");
-        //reps.setText("db_reps");
-        /*
-        elistAdapter = new SimpleCursorAdapter(getContext(),
-                R.layout.exercise_list,
-                mCursor,
-                print_columns,
-                new int[] { R.id.exercise},0);
-        lv_elist.setAdapter(elistAdapter);
-
-         */
-
-
     }
     public void onPause() {
         super.onPause();
@@ -238,26 +195,10 @@ public class EditExerciseFragment extends Fragment {
             db_exSETS = mCursor.getString(mCursor.getColumnIndexOrThrow("sets"));
             db_exWEIGHT = mCursor.getString(mCursor.getColumnIndexOrThrow("weight"));
 
-            //Toast.makeText(getContext(), db_exREPS +"" , Toast.LENGTH_SHORT).show();
-
-
             txt_update.setText("Update values for " + db_ex);
             exercise.setText(db_ex);
             reps.setHint(db_exREPS);
             sets.setHint(db_exSETS);
-           // reps.setHint("7");
-            //reps.setText("db_reps");
-            /*
-            elistAdapter = new SimpleCursorAdapter(getContext(),
-                    R.layout.exercise_list,
-                    data,
-                    print_columns,
-                    new int[] { R.id.exercise},0);
-            mCursor = data;
-            lv_elist.setAdapter(elistAdapter);
-
-             */
-
         }
 
         @Override

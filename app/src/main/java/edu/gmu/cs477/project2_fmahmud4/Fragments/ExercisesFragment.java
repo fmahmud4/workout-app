@@ -22,15 +22,11 @@ import android.widget.SimpleCursorAdapter;
 import edu.gmu.cs477.project2_fmahmud4.R;
 
 public class ExercisesFragment extends Fragment {
-    //TODO USE RECYCLER VIEW -- DONE
-    //TODO IMPLEMENT TYPE SETTING and GENERALS -- DONE
 
     //TODO IMPLEMENT NOTES
 
-    //TODO MAKE SURE SCROLLING WORKS PROPERLY
-
-    //TODO implement edit workout screen
-    //TODO implement add workout screen
+    //TODO Implement Delete
+    //TODO Implement Workout screen
 
 
 
@@ -93,6 +89,19 @@ public class ExercisesFragment extends Fragment {
                 transaction.addToBackStack(EditExerciseFragment.TAG);
                 transaction.replace(R.id.main_frame, editDB);
                 transaction.commit();
+            }
+        });
+
+        lv_elist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long id) {
+
+                db.delete(dbHelper.TABLE_NAME,dbHelper.ID + " =?",
+                        new String[] { id+"" });
+                dbLoader = new LoadDB();
+                dbLoader.execute();
+                dbLoader.onPostExecute(mCursor);
+                return false;
             }
         });
 
