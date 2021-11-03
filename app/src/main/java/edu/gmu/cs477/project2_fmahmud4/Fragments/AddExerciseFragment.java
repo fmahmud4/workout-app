@@ -120,25 +120,14 @@ public class AddExerciseFragment extends Fragment {
                         throw new Exception("You must have an initial weight");
                     }
                     db.insert(ExerciseListDBHelper.TABLE_NAME, null, cv);
-
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    if(fm.getBackStackEntryCount() != 0) {
+                        fm.popBackStack();
+                    }
                 } catch (Exception e){
                     Toast.makeText(getContext(),  "Failed to add: " + e , Toast.LENGTH_LONG).show();
 
                 }
-
-
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                if(fm.getBackStackEntryCount() != 0) {
-                    fm.popBackStack();
-                }
-
-
-/*
-                dbLoader = new AddExerciseFragment.LoadDB();
-                dbLoader.execute();
-                dbLoader.onPostExecute(mCursor);
-
- */
 
             }
         });

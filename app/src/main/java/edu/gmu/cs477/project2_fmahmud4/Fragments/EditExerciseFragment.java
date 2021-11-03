@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.gmu.cs477.project2_fmahmud4.R;
 
@@ -180,25 +181,31 @@ public class EditExerciseFragment extends Fragment {
 
     private final class LoadDB extends AsyncTask<String, Void, Cursor> {
         @Override protected void onPostExecute(Cursor data) {
-            db = dbHelper.getWritableDatabase();
 
-            mCursor = db.query(ExerciseListDBHelper.TABLE_NAME, all_columns, null, null, null, null,
-                    null);
-            while (mCursor.moveToNext()) {
-                if (mCursor.getInt(mCursor.getColumnIndexOrThrow("_id")) == e_id) {
-                    break;
+            try {
+                db = dbHelper.getWritableDatabase();
+
+                mCursor = db.query(ExerciseListDBHelper.TABLE_NAME, all_columns, null, null, null, null,
+                        null);
+                while (mCursor.moveToNext()) {
+                    if (mCursor.getInt(mCursor.getColumnIndexOrThrow("_id")) == e_id) {
+                        break;
+                    }
                 }
-            }
-            db_ex =  mCursor.getString(mCursor.getColumnIndexOrThrow("exercise"));
-            db_exID = mCursor.getString(mCursor.getColumnIndexOrThrow("_id"));
-            db_exREPS = mCursor.getString(mCursor.getColumnIndexOrThrow("reps"));
-            db_exSETS = mCursor.getString(mCursor.getColumnIndexOrThrow("sets"));
-            db_exWEIGHT = mCursor.getString(mCursor.getColumnIndexOrThrow("weight"));
+                db_ex = mCursor.getString(mCursor.getColumnIndexOrThrow("exercise"));
+                db_exID = mCursor.getString(mCursor.getColumnIndexOrThrow("_id"));
+                db_exREPS = mCursor.getString(mCursor.getColumnIndexOrThrow("reps"));
+                db_exSETS = mCursor.getString(mCursor.getColumnIndexOrThrow("sets"));
+                db_exWEIGHT = mCursor.getString(mCursor.getColumnIndexOrThrow("weight"));
 
-            txt_update.setText("Update values for " + db_ex);
-            exercise.setText(db_ex);
-            reps.setHint(db_exREPS);
-            sets.setHint(db_exSETS);
+                txt_update.setText("Update values for " + db_ex);
+                exercise.setText(db_ex);
+                reps.setHint(db_exREPS);
+                sets.setHint(db_exSETS);
+            } catch (Exception e) {
+                Toast.makeText(getContext(),  "Failed to update: " + e , Toast.LENGTH_LONG).show();
+
+            }
         }
 
         @Override

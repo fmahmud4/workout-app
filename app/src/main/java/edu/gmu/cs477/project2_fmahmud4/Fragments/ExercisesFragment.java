@@ -1,5 +1,6 @@
 package edu.gmu.cs477.project2_fmahmud4.Fragments;
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,12 +27,10 @@ public class ExercisesFragment extends Fragment {
 
     //TODO IMPLEMENT NOTES
 
-    //TODO Implement Delete
     //TODO Implement Workout screen
 
 
 
-    private WorkoutViewModel mViewModel;
     private SQLiteDatabase db = null;
     private ExerciseListDBHelper dbHelper = null;
     private LoadDB dbLoader = null;
@@ -95,13 +95,8 @@ public class ExercisesFragment extends Fragment {
         lv_elist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long id) {
-
-                db.delete(dbHelper.TABLE_NAME,dbHelper.ID + " =?",
-                        new String[] { id+"" });
-                dbLoader = new LoadDB();
-                dbLoader.execute();
-                dbLoader.onPostExecute(mCursor);
-                return false;
+                alertView("Deleting exercise", id);
+                return true;
             }
         });
 
@@ -155,6 +150,26 @@ public class ExercisesFragment extends Fragment {
             return db.query(dbHelper.TABLE_NAME, all_columns, null, null,
                     null, null, null);
         }
+    }
+
+    private void alertView(String message, final long id) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setTitle( message )
+                .setIcon(R.drawable.bg_btn)
+                .setMessage("Are you sure you want to delete this exercise?")
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                        dialoginterface.cancel();
+                    }})
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                        db.delete(dbHelper.TABLE_NAME,dbHelper.ID + " =?",
+                                new String[] { id+"" });
+                        dbLoader = new LoadDB();
+                        dbLoader.execute();
+                        dbLoader.onPostExecute(mCursor);
+                    }
+                }).show();
     }
 
 }
