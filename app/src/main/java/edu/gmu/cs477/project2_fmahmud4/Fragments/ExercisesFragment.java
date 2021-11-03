@@ -25,8 +25,6 @@ import edu.gmu.cs477.project2_fmahmud4.R;
 
 public class ExercisesFragment extends Fragment {
 
-    //TODO IMPLEMENT NOTES
-
     //TODO Implement Workout screen
 
 
@@ -35,7 +33,6 @@ public class ExercisesFragment extends Fragment {
     private ExerciseListDBHelper dbHelper = null;
     private LoadDB dbLoader = null;
     private Button btn_add;
-    public static RecyclerView rv_elist;
     public static ListView lv_elist;
     SimpleCursorAdapter elistAdapter;
     Cursor mCursor;
@@ -45,7 +42,8 @@ public class ExercisesFragment extends Fragment {
             ExerciseListDBHelper.EXERCISE,
             ExerciseListDBHelper.SETS,
             ExerciseListDBHelper.REPS,
-            ExerciseListDBHelper.WEIGHT
+            ExerciseListDBHelper.WEIGHT,
+            ExerciseListDBHelper.NOTES
     };
     final static String[] print_columns = {
             ExerciseListDBHelper.EXERCISE

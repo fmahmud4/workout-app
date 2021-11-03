@@ -37,7 +37,8 @@ public class AddExerciseFragment extends Fragment {
             ExerciseListDBHelper.EXERCISE,
             ExerciseListDBHelper.SETS,
             ExerciseListDBHelper.REPS,
-            ExerciseListDBHelper.WEIGHT
+            ExerciseListDBHelper.WEIGHT,
+            ExerciseListDBHelper.NOTES
     };
 
 
@@ -86,11 +87,6 @@ public class AddExerciseFragment extends Fragment {
                 try {
                     if (!isEmpty(exercise)) {
                         cv.put(ExerciseListDBHelper.EXERCISE, exercise.getText().toString());
-                        /*Cursor c = db.rawQuery("SELECT * FROM " +
-                                dbHelper.TABLE_NAME + " WHERE "+
-                                dbHelper.EXERCISE +" = "+ exercise.getText(), null);
-
-                         */
                         Cursor c = db.query(dbHelper.TABLE_NAME, all_columns, dbHelper.EXERCISE + "=?",
                                 new  String[] {String.valueOf(exercise.getText())}, null, null, null);
                         if (c.moveToFirst()) {
@@ -118,6 +114,11 @@ public class AddExerciseFragment extends Fragment {
                     } else {
                         //cv.put(ExerciseListDBHelper.WEIGHT, db_exWEIGHT);
                         throw new Exception("You must have an initial weight");
+                    }
+                    if (!isEmpty(notes)) {
+                        cv.put(ExerciseListDBHelper.NOTES, notes.getText().toString());
+                    } else {
+                        cv.put(ExerciseListDBHelper.NOTES, "");
                     }
                     db.insert(ExerciseListDBHelper.TABLE_NAME, null, cv);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -153,7 +154,7 @@ public class AddExerciseFragment extends Fragment {
             db_exREPS = mCursor.getString(mCursor.getColumnIndexOrThrow("reps"));
             db_exSETS = mCursor.getString(mCursor.getColumnIndexOrThrow("sets"));
             db_exWEIGHT = mCursor.getString(mCursor.getColumnIndexOrThrow("weight"));
-
+            db_exNOTES = mCursor.getString(mCursor.getColumnIndexOrThrow("notes"));
         }
 
         @Override

@@ -22,9 +22,9 @@ public class ExerciseListDBHelper extends SQLiteOpenHelper {
                     SETS + " TEXT NOT NULL, " +
                     REPS + " TEXT NOT NULL, " +
                     WEIGHT + " TEXT NOT NULL, " +
-                    NOTES + "TEXT)";
+                    NOTES + " TEXT)";
 
-    final private static Integer DBVERSION = 1;
+    final private static Integer DBVERSION = 3;
     final private Context context;
 
     public ExerciseListDBHelper(Context context) {
@@ -42,16 +42,19 @@ public class ExerciseListDBHelper extends SQLiteOpenHelper {
         values.put(this.SETS, "5");
         values.put(this.REPS, "5");
         values.put(this.WEIGHT, "135");
+        values.put(this.NOTES, "");
         db.insert(this.TABLE_NAME, null, values);
         values.put(this.EXERCISE, "Bench Press");
         values.put(this.SETS, "4");
         values.put(this.REPS, "8");
         values.put(this.WEIGHT, "95");
+        values.put(this.NOTES, "");
         db.insert(this.TABLE_NAME, null, values);
         values.put(this.EXERCISE, "Deadlift");
         values.put(this.SETS, "8");
         values.put(this.REPS, "1");
         values.put(this.WEIGHT, "185");
+        values.put(this.NOTES, "");
         db.insert(this.TABLE_NAME, null, values);
 
 
