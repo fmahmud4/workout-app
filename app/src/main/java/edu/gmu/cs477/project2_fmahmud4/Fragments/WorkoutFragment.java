@@ -144,17 +144,12 @@ public class WorkoutFragment extends Fragment {
                 .setMessage("Are you done with this exercise?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialoginterface, int i) {
-                        db = dbHelper.getWritableDatabase();
 
-                        mCursor = db.query(dbHelper.TABLE_NAME, all_columns, dbHelper.ID + "!=?",
-                                new  String[] {String.valueOf(id)}, null, null, null);
-
-                        elistAdapter = new SimpleCursorAdapter(getContext(),
-                                R.layout.exercise_list,
-                                mCursor,
-                                print_columns,
-                                new int[] { R.id.exercise},0);
-                        lv_elist.setAdapter(elistAdapter);
+                        db.delete(dbHelper.TABLE_NAME,dbHelper.ID + " =?",
+                                new String[] { id+"" });
+                        dbLoader = new LoadDB();
+                        dbLoader.execute();
+                        dbLoader.onPostExecute(mCursor);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

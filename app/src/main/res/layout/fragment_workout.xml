@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_centerInParent="true"
-                android:text="1) Tap exercise to view details\n2) Hold exercise to delete\"
+                android:text="1) Tap exercise to view details\n2) Hold exercise to remove\"
                 android:textAlignment="center"
                 android:textSize="10dp"
                 android:textStyle="bold" />
