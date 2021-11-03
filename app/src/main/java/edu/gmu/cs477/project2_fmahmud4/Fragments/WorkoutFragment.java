@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class WorkoutFragment extends Fragment {
     private ExerciseListDBHelper dbHelper = null;
     private WorkoutFragment.LoadDB dbLoader = null;
     public static ListView lv_elist;
+    private Button btn_end;
     SimpleCursorAdapter elistAdapter;
     Cursor mCursor;
 
@@ -63,7 +65,16 @@ public class WorkoutFragment extends Fragment {
 
         lv_elist = v.findViewById(R.id.lv_elist);
         dbHelper = new ExerciseListDBHelper(getContext());
-
+        btn_end = v.findViewById(R.id.btn_end);
+        btn_end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                if(fm.getBackStackEntryCount() != 0) {
+                    fm.popBackStack();
+                }
+            }
+        });
         lv_elist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
@@ -129,7 +140,7 @@ public class WorkoutFragment extends Fragment {
     private void alertView(String message ,final long id) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         dialog.setTitle( message )
-                .setIcon(R.drawable.ic_launcher_background)
+                .setIcon(R.drawable.bg_btn)
                 .setMessage("Are you done with this exercise?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialoginterface, int i) {

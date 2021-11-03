@@ -25,10 +25,6 @@ import edu.gmu.cs477.project2_fmahmud4.R;
 
 public class ExercisesFragment extends Fragment {
 
-    //TODO Implement Workout screen
-
-
-
     private SQLiteDatabase db = null;
     private ExerciseListDBHelper dbHelper = null;
     private LoadDB dbLoader = null;
